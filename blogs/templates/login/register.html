@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>注册博客</title>
+    <script src="/static/js/jquery-3.4.1.js"></script>
+    <script src="/static/js/jquery.validate.js"></script>
+    <script src="/static/js/jquery.form.js"></script>
+
+</head>
+<body>
+<form action="/user/registerHandler/" method="post">
+    {% csrf_token %}
+    <div>
+        <label>用户名：</label>
+        <input type="text" id="name" name="username"/>
+    </div>
+    <div>
+        <label>密码：</label>
+        <input type="password" id="pwd" name="pwd"/>
+    </div>
+    <div>
+        <label>邮箱：</label>
+        <input type="email" id="email" name="email" placeholder="选填"/>
+    </div>
+     <div>
+        <label>注册时间：</label>
+        <input type="text" id="time" name="time" disabled/>
+    </div>
+    <input type="submit" value="注册"/>
+
+</form>
+</body>
+<script>
+    init();
+    function init(){
+        now=new Date();
+        $("#time").val(now)
+        validate();
+    }
+    function validate() {
+        $("form").validate({
+            rules: {
+                username: {
+                    required: true,
+                    minlength: 2,
+                    maxlength: 10
+                },
+                pwd: {
+                    required: true,
+                }
+            },
+            messages:{
+                username:{
+                    required:"请填写此处",
+                    minlength:"请按要求填写",
+                    maxlength:"请按照要求填写"
+                },
+                pwd:{
+                    required:"请填写此处",
+                }
+            },
+            submitHandler:function (form){
+            {##表单提交之前的处理#}
+                $("form").ajaxSubmit(function (message){
+                    var data=JSON.parse(message);
+                    if (data["code"]==0){
+                        alert(data["mgs"])
+                        {#alert("注册成功")#}
+                        location.href="/user/login"
+                    }else{
+                        alert(data["mgs"])
+                        {#alert("当前用户名已注册")#}
+                    }
+                })
+            }
+        })
+    }
+
+</script>
+</html>

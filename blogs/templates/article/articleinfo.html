@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>文章详情</title>
+     <script src="/static/js/jquery-3.4.1.js"></script>
+    <script src="/static/js/jquery.form.js"></script>
+    <script src="/static/js/jquery.validate.js"></script>
+    <script src="/static/js/cookie.js"></script>
+    <style type="text/css">
+        #content{
+            margin: auto;
+            border: 1px solid black;
+            width: 600px;
+        }
+    </style>
+</head>
+<body>
+<div id="content">
+    <h1></h1>
+    <p></p>
+</div>
+</body>
+    <script>
+        init()
+        function init() {
+            //获取url的路径  获得id值
+            //http://127.0.0.1:8000/article/getarticleinfo/?id=2
+            var id=location.search.split("=")[1]
+            $.ajax({
+                url:"/article/getarticleinfo/",
+                type:"get",
+                data:{
+                    id:id
+                },
+                dataType:"json",
+                success:function (data) {
+                    console.log("-----------")
+                    console.log(data)
+                    $("h1").html(data["data"]["title"])
+                    $("p").html(data["data"]["content"])
+                }
+            })
+        }
+    </script>
+</html>

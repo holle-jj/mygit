@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>添加博客</title>
+    <script src="/static/js/jquery-3.4.1.js"></script>
+    <script src="/static/js/jquery.form.js"></script>
+    <script src="/static/js/jquery.validate.js"></script>
+    <script src="/static/js/cookie.js"></script>
+    <style type="text/css">
+        form{
+            text-align: center;
+        }
+        #title{
+            width: 400px;
+            height: 30px;
+            margin-bottom: 15px;
+        }
+        #content{
+            height: 300px;
+            width: 400px;
+            margin-bottom: 15px;
+        }
+        #time{
+            width: 330px;
+            margin-bottom: 15px;
+        }
+        #author{
+            margin-right: 25px;
+        }
+    </style>
+</head>
+<body>
+    <form action="/article/addblogsHandler/" method="post" >
+        {% csrf_token %}
+        <div>
+            <input placeholder="文章标题" id="title" name="title"/>
+        </div>
+        <div>
+            <input placeholder="文章内容" id="content" name="content"/>
+        </div>
+        <div>
+            <input id="time" name="time" disabled/>
+        </div>
+        <div>
+            <input type="text" id="author"  name="author" disabled/>
+            <input type="hidden" id="uid"  name="uid"/>
+            <input type="submit" value="发布"/>
+        </div>
+
+    </form>
+</body>
+<script>
+    init()
+    function init() {
+        //从cookie中获取uid 通过ajax传递到后端用来获取用户名
+        uid=getCookie("uid")
+        $("#uid").val(uid)
+        now=new Date()
+         $("#time").val(now)
+        $.ajax({
+            url:"/article/getauthor/",
+            type:"get",
+            data:{
+                uid:uid
+            },
+            dataType:"json",
+            success:function (data) {
+                $("#author").val(data["data"]["username"])
+            }
+        })
+        validate();
+    }
+    function validate() {
+        $("form").validate({
+            rules: {
+                title: {
+                    required: true,
+                },
+                text: {
+                    required: true,
+                }
+            },
+            messages: {
+                title: {
+                    required: "此处不能为空",
+                },
+                text: {
+                    required: "此处不能为空",
+                }
+            },
+            submitHandler: function (form) {
+                $("form").ajaxSubmit(function (message) {
+                    var data = JSON.parse(message);
+                    if (data["code"] == 0) {
+                        alert(data["mgs"])
+                        location.href = "/article/blogsList"
+                    } else {
+                        alert(data["mgs"])
+                    }
+                })
+            }
+        })
+    }
+</script>
+</html>

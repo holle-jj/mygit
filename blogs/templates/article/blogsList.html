@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>博客列表</title>
+    <script src="/static/js/jquery-3.4.1.js"></script>
+    <script src="/static/js/jquery.form.js"></script>
+    <script src="/static/js/jquery.validate.js"></script>
+    <script src="/static/js/cookie.js"></script>
+    <style type="text/css">
+        #list{
+            margin: auto;
+            border: 1px solid black;
+            width: 900px;
+        }
+    </style>
+</head>
+<body>
+<h1>博客列表</h1>
+<button id="write">写博客</button>
+<div id="list">
+
+var _url="/article/articleinfo?id="+data["data"][i]["id"]#}
+ str+="<div><h3><a href='"+_url+"'>"+titleName+"</a></h3></div>"#}
+
+http://127.0.0.1:8000/article/blogsList/'/article/articleinfo?id=%27+3
+    {% for item in articleList %}
+        <h1>{{ item.title }}</h1>
+    {% endfor %}
+
+    <h1></h1>
+    <p></p>
+    <h3></h3>
+</div>
+</body>
+<script>
+    init();
+    function init() {
+        $("#write").on("click",function () {
+              location.href="/article/addblogs"
+        })
+        {#uid=getCookie("uid")#}
+        {# console.log("-----------")#}
+        {#console.log(uid)#}
+        {##}
+        {# $.ajax({#}
+        {#    url:"/article/getblogsList/",#}
+        {#    type:"get",#}
+        {#    data:{#}
+        {#        uid:uid#}
+        {#    },#}
+        {#    contentType: 'application/json; charset=UTF-8',#}
+        {#    dataType:"json",#}
+        {#    success:function (data) {#}
+        {#         console.log("234dfghjkl")#}
+        {#         console.log(data)#}
+        {#        var str="";#}
+        {#        for(var i=0; i<data["data"].length;i++){#}
+        {#            var  titleName=data["data"][i]['title'];#}
+        {#            var _url="/article/articleinfo?id="+data["data"][i]["id"]#}
+        {#            str+="<div><h3><a href='"+_url+"'>"+titleName+"</a></h3></div>"#}
+        {#            $("#list").html(str);#}
+        {#        }#}
+        {#    }#}
+
+    }
+
+
+
+</script>
+</html>
