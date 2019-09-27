@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+	    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+	    <meta name="viewport" content="initial-scale=1.0, user-scalable=no, width=device-width">
+	    <link rel="stylesheet" href="https://a.amap.com/jsapi_demos/static/demo-center/css/demo-center.css" />
+    	<script src="https://webapi.amap.com/maps?v=1.4.15&key=7295dba9c67d2956b663cd67e4d5e924&plugin=AMap.Transfer&plugin=AMap.Driving&plugin=AMap.Walking&plugin=AMap.Riding"></script>
+    	<title></title>	
+		<script type="text/javascript" src="js/jquery-3.4.1.js" ></script>
+		<style type="text/css">
+			*{margin: 0;padding: 0;border: 0;}
+			.auto{margin: auto;}
+			.clear{clear: both;}
+			.float-L{float: left;}
+			.float-R{float: right;}
+			#container{
+				display: none;
+				width: 1000px;
+         		 height: 600px;
+			}
+			.info{
+	            width:26rem;
+	            display: none;
+	        }
+			/*最外层容器*/
+			#wrap{  
+				width: 640px;
+				border: 1px solid gainsboro;
+				margin: auto;
+				height: 960px;
+			}
+			/*头部*/	
+			#header{
+				width: 640px;
+				height: 70px;
+				background-color: #59ABB6;
+				position: relative;
+				margin-bottom: 15px;
+			}
+			
+			#header #icon{
+				margin-left: 35px;
+				font-size: 35px;
+				padding-top: 50%;
+			}
+			
+			#header #city{
+				font-size: 23px;
+				margin-left: 10px;
+				position: absolute;
+				top: 12px;
+			}			
+			#header #input{
+				width: 50%;
+				height: 50%;
+				position: absolute;
+				top: 25%;
+				left: 30%;
+				font-size: 20px;
+				padding-left: 15px;
+			}
+			#header #symbol{	
+				font-size: 35px; 
+				position: absolute;
+				right: 40px;
+			}
+			.goodsShow{
+				width: 100%;
+				margin-bottom: 15px;
+			}
+			figure{
+				width: 25%;
+				float: left;
+				box-sizing: border-box;
+				text-align: center;
+			}
+			figcaption{
+				text-align: center;
+			}
+			.near{
+				height: 70px;
+				width: 100%;
+				position: relative;
+				border: 1px solid gainsboro;
+				margin-bottom: 15px;
+			}
+			
+			.near .nearshop{
+				font-size: 25px;
+				position: absolute;
+				top: 14px;
+			}
+			.near .many{
+				font-size: 22px;
+				position: absolute;
+				top: 14px;
+				right: 25px;
+			}
+			/*附近商家*/
+			#merchant{
+				width: 95%;
+				height: 650px;
+				margin: auto;
+				overflow: auto;
+			}
+			#merchant .merchantInfo{
+				border: 1px solid gainsboro;
+				border-radius: 2%;
+				height: 260px;
+				padding-left: 15px;
+				padding-top: 10px;
+				position: relative;
+				margin-bottom: 10px;
+			}
+			.foodImg figure{
+				width: 31%;
+				float: left;
+				box-sizing: border-box;
+				text-align: center;
+				margin-right: 2%;
+			}
+			.changeClass{
+				color: red;
+			}
+			
+		</style>
+	</head>
+	<body>
+		<div id="container"></div>
+		<div class="info">
+		    <h4 id='status'></h4><hr>
+		    <p id='result'></p><hr>
+		    <p >由于众多浏览器已不再支持非安全域的定位请求，为保位成功率和精度，请升级您的站点到HTTPS。</p>
+		</div>
+		<div id="wrap">
+			<div id="header">
+				<span id="icon"><</span>
+				<span id="city"></span>
+				<input type="text" name="search" id="input" placeholder="请输入商圈、店铺" />
+				<span id="symbol">+</span>
+			</div>
+			<div class="goodsShow">
+				<div>
+					<figure class="change" type="餐饮服务">
+						<img src="img/barbecue.png"/>
+						<figcaption>小吃美食</figcaption>
+					</figure>			
+					<figure class="change" type="生活服务">
+						<img src="img/fruit.png"/>
+						<figcaption>生鲜果蔬</figcaption>
+					</figure>
+					<figure class="change" type="餐饮服务">
+						<img src="img/flower.png"/>
+						<figcaption>鲜花蛋糕</figcaption>
+					</figure>					
+					<figure class="change" type="酒店服务">
+						<img src="img/supermarket.png"/>
+						<figcaption>酒店住宿</figcaption>
+					</figure>
+				</div>
+				<div class="clear"></div>
+				<div>
+					<figure class="change" type="餐饮服务">
+						<img src="img/hamburger.png"/>
+						<figcaption>汉堡披萨</figcaption>
+					</figure>
+					
+					<figure class="change" type="餐饮服务">
+						<img src="img/wine.png"/>
+						<figcaption>能量西餐</figcaption>
+					</figure>
+					<figure class="change" type="餐饮服务">
+						<img src="img/beer.png"/>
+						<figcaption>夜宵</figcaption>
+					</figure>
+					<figure class="change" type="汽车销售">
+						<img src="img/car.png"/>
+						<figcaption>汽车销售</figcaption>
+					</figure>
+				</div>
+				<div class="clear"></div>
+			</div>
+			<!--附近商家-->
+			<div class="near">
+				<img src="img/2.png"/>
+				<span class="nearshop">附近商家</span>
+				<span class="many">查看更多 ></span>
+			</div>
+			<!--商家展示-->
+			<div id="merchant"></div>
+		</div>
+		
+	</body>
+	<script>  
+	 		//	定义引入地图
+	    var map = new AMap.Map('container', {
+	        resizeEnable: true, //是否监控地图容器尺寸变化
+	
+	    });
+	    var lnglat=null;   //经纬度
+//	    var shop={}  //商家信息
+	    var pageSize=5;  //商家信息初始单页显示条数
+	    var page=1   //商家信息初始页码
+	    var allPage=0; //总页数
+	    var type=type;  //搜索类型
+	    var shopLnglat=null //商家经纬度  
+	//		初始化    
+	    init();
+	    function init(){
+	    	search()
+	    	getPosition()
+	    	$(".goodsShow figure").click(searchInfo)
+	    	$("#merchant").scroll(scrollFun)//商家信息按需加载
+	    } 
+	    //input关键字搜索
+	   	function search(){
+	   		AMap.plugin(['AMap.Autocomplete','AMap.PlaceSearch'],function(){
+				var autoOptions = {
+				    // 城市，默认全国 
+		//		    city: "北京",
+				    // 使用输入的input的id
+				  input: "input"
+				}
+				var autocomplete= new AMap.Autocomplete(autoOptions)		
+				var placeSearch = new AMap.PlaceSearch({
+		//		    city:'北京',
+				   map:map
+				})
+				AMap.event.addListener(autocomplete, 'select', function(e){
+				  //TODO 针对选中的poi实现自己的功能
+				   placeSearch.search(e.poi.name)
+				})
+			 })
+	   	}
+	//  获取经纬度 详细地址
+		function getPosition(){
+			//  插件
+	   		AMap.plugin('AMap.Geolocation', function() {
+	         	var geolocation = new AMap.Geolocation({
+	            enableHighAccuracy: true,//是否使用高精度定位，默认:true
+	            timeout: 10000,          //超过10秒后停止定位，默认：5s
+	            buttonPosition:'RB',    //定位按钮的停靠位置
+	            buttonOffset: new AMap.Pixel(10, 20),//定位按钮与设置的停靠位置的偏移量，默认：Pixel(10, 20)
+	            zoomToAccuracy: true,   //定位成功后是否自动调整地图视野到定位点
+	
+	         });
+	         map.addControl(geolocation);
+	         geolocation.getCurrentPosition(function(status,result){
+	             if(status=='complete'){
+	              //定位成功  获取位置 
+		            lnglat=result.position;   //获取经纬度
+		            $("#city").html(result.addressComponent.city);//城市赋值		
+					addMarker();  //调用点标记方法
+					searchNearby("餐饮服务") //调用周边搜索  初始值为“餐饮服务”
+	             }else{
+	              //定位失败
+//	              alert(status+"失败")  
+	             }
+	         }); 
+	     });
+		}
+	   	 // 添加点标记
+	   	function addMarker(){
+			var marker = new AMap.Marker({
+				map:map,
+	            position: lnglat,
+	            offset: new AMap.Pixel(-13, -30)
+	      });
+		}
+	   	       
+		//商品分类点击事件   
+		function searchInfo(){
+			page=1 //每点击一次 页码初始值为1
+			type=$(this).attr("type")
+			searchNearby()  
+		}
+	   	//周边搜索  	
+		function searchNearby(){
+	    	AMap.service(["AMap.PlaceSearch"], function() {
+		        //构造地点查询类	
+		        var placeSearch = new AMap.PlaceSearch({ 
+		            type: type, // 兴趣点类别
+		            pageSize: pageSize, // 单页显示结果条数
+		            pageIndex: page, // 页码
+		//          city: "010", // 兴趣点城市
+		//          citylimit: true,  //是否强制限制在设置的城市内搜索
+		            map: map, // 展现结果的地图实例
+		            panel: "merchant", // 结果列表将在此容器中进行展示。
+		            autoFitView: true // 是否自动调整地图视野使绘制的 Marker点都处于视口的可见范围
+		        });
+		         
+		        var cpoint = lnglat; //中心点坐标
+		        placeSearch.searchNearBy('', cpoint, 1000, function(status, result) {
+		        	if(status=="no_data"||status==""){
+						$("#serchrResult").html("没有搜索到结果")
+						return;
+		        	}
+		        	//获取总条数
+		        	var count=result.poiList.count;
+		        	allPage=Math.ceil(count/pageSize)  //向上取整总页数
+	        		//poiList  兴趣点列表   pois数组
+	        		str=""
+	        		for (var i=0;i<result.poiList.pois.length;i++) {
+	        			var items=result.poiList.pois[i];
+	   
+						var shopName=items.name     //商家名称
+						var shopTel=items.tel?items.tel:" "        //商家电话
+						var shopAddr=items.address?items.address:"地址不详"  //商家address
+						
+						var shopDist=items.distance //商家距离中心距离
+						
+						shopLnglat=items.location    //商家经纬度
+						console.log(shopLnglat)
+						var _name='<h2  onclick="shopInfo()">'+shopName+'</h2><img src="img/resizeApi.png"  onclick="shopInfo()" style="width: 5%;"/>'
+						var addr='<span style="position: absolute;top: 45px;">'+shopAddr+'/ 距离'+shopDist+'米</span><p style="margin-bottom: 10px;"><span style="color: red;">4.5分 </span>| 月售2860 | 配送￥1 | 人均17</p><div class="foodImg"  onclick="shopInfo()" style="margin: auto;width: 97%;"><figure><img src="img/foodONE.png" style="border-radius: 5%;width: 98%;"/><figcaption>蜜汁烤饭</figcaption></figure><figure><img src="img/foodONE.png" style="border-radius: 5%;width: 98%;"/><figcaption>蜜汁烤饭</figcaption></figure><figure><img src="img/foodONE.png" style="border-radius: 5%;width: 98%;"/><figcaption>蜜汁烤饭</figcaption></figure><div class="clear"></div></div>'
+						var phone=''
+						if (shopTel!=""){
+							var phone='<div style="position: absolute;top: 25px;right: 4%;"><a id="tel" href="" onclick="Tel()"><img src="img/tel.png"/></a><a id="sms" href="" onclick="sms()"><img src="img/message.png"/></a></div>'
+						}
+						var content='<div class="merchantInfo">'+_name+addr+phone+'</div>'
+						str+=content
+						//调用电话和短信方法
+						Tel(shopTel)
+						sms(shopTel)
+						
+	        		}
+	        		$("#merchant").html(str)
+		        });
+		    });
+	
+	    }  
+		//给电话短信添加点击事件     给电话和短信href属性赋值
+		function Tel(shopTel){
+			$("#tel").attr("href","tel"+shopTel)
+		}
+		function sms(shopTel){
+			$("#sms").attr("href","sms"+shopTel)
+		}
+	 
+		//按需加载
+		function scrollFun(){
+			console.log(123)
+			  // 1,文档的总高度
+			var THight=$(document).height();
+			console.log(THight)
+		//2,可视区域的高度
+			var CHight=$(window).height();
+			console.log(CHight)
+		//3,超出可视区域的供电
+			var clscroll=$(window).scrollTop();
+			console.log(clscroll)
+			if (THight==CHight+clscroll) {
+				page++;
+				if(page<=allPage){
+					searchNearby()
+				}
+			 	
+			}	 
+		}	
+		//商家路线点击事件
+		function shopInfo(){
+			location.href="line.html?id="+lnglat+"&id2="+shopLnglat
+			console.log(shopLnglat)
+		} 
+
+	</script>
+</html>
+
+
+
+	
+	
+	
+	
+	
+		
+		
+	
+	
